@@ -48,7 +48,8 @@ class ECommerceApp extends StatelessWidget {
           create: (context) => LoginCubit()
             ..getHomeData()
             ..getCategories()
-            ..getFav(),
+            ..getFav()
+            ..getProfile(),
         ),
       ],
       child: MaterialApp(

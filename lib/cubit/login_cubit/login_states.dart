@@ -41,3 +41,24 @@ class GetFavLoadingState extends LoginStates {}
 class GetFavSuccessState extends LoginStates {}
 
 class GetFavErrorState extends LoginStates {}
+
+class GetCatProductLoadingState extends LoginStates {}
+
+class GetCatProductSuccessState extends LoginStates {}
+
+class GetCatProductErrorState extends LoginStates {}
+
+class GetProductDetailsLoadingState extends LoginStates {}
+
+class GetProductDetailsSuccessState extends LoginStates {}
+
+class GetProductDetailsErrorState extends LoginStates {}
+
+class GetProfileLoadingState extends LoginStates {}
+
+class GetProfileSuccessState extends LoginStates {
+  final SignInModel? userModel;
+  GetProfileSuccessState(this.userModel);
+}
+
+class GetProfileErrorState extends LoginStates {}

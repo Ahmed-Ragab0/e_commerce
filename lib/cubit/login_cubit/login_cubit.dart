@@ -1,7 +1,9 @@
 import 'package:e_commerce/cubit/login_cubit/login_states.dart';
 import 'package:e_commerce/models/categories_model.dart';
+import 'package:e_commerce/models/category_products_model.dart';
 import 'package:e_commerce/models/change_favorite_model.dart';
 import 'package:e_commerce/models/favorites_data_model.dart';
+import 'package:e_commerce/models/product_model.dart';
 import 'package:e_commerce/models/sign_in_model.dart';
 import 'package:e_commerce/models/home_model.dart';
 import 'package:e_commerce/modules/category_screen/category_screen.dart';
@@ -46,6 +48,22 @@ class LoginCubit extends Cubit<LoginStates> {
     });
   }
 
+  SignInModel? userModel;
+  void getProfile() {
+    emit(GetProfileLoadingState());
+    DioHelper.getData(url: profile, token: token).then(
+      (value) {
+        userModel = SignInModel.fromJson(value!.data);
+        emit(GetProfileSuccessState(userModel));
+      },
+    ).catchError(
+      (error) {
+        print(error.toString());
+        emit(GetProfileErrorState());
+      },
+    );
+  }
+
   IconData suffix = Icons.visibility;
   bool isSecure = true;
   void changePasswordIcon() {
@@ -54,7 +72,7 @@ class LoginCubit extends Cubit<LoginStates> {
     emit(ChangePasswordIconState());
   }
 
-  List<Widget> screens = const [
+  List<Widget> screens = [
     HomeScreen(),
     CategoryScreen(),
     FavoriteScreen(),
@@ -199,6 +217,53 @@ class LoginCubit extends Cubit<LoginStates> {
       (error) {
         print(error.toString());
         emit(GetFavErrorState());
+      },
+    );
+  }
+
+  CategoryProductModel? categoryProductModel;
+  void getCategoryProducts(categoryId) {
+    emit(GetCatProductLoadingState());
+
+    DioHelper.getData(
+      url: categoryProducts,
+      token: token,
+      query: {
+        'category_id': categoryId,
+      },
+    ).then(
+      (value) {
+        categoryProductModel = CategoryProductModel.fromJson(value!.data);
+        print(categoryProductModel!.data!.data);
+
+        emit(GetCatProductSuccessState());
+      },
+    ).catchError(
+      (error) {
+        print(error.toString());
+        emit(GetCatProductErrorState());
+      },
+    );
+  }
+
+  ProductDetailsModel? productDetailsModel;
+  void getProductDetails() {
+    emit(GetProductDetailsLoadingState());
+
+    DioHelper.getData(
+      url: categoryProducts,
+      token: token,
+    ).then(
+      (value) {
+        productDetailsModel = ProductDetailsModel.fromJson(value!.data);
+        print(productDetailsModel!.data!.data![0].name);
+
+        emit(GetProductDetailsSuccessState());
+      },
+    ).catchError(
+      (error) {
+        print(error.toString());
+        emit(GetProductDetailsErrorState());
       },
     );
   }

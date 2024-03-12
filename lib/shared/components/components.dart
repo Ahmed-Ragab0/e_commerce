@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:e_commerce/cubit/login_cubit/login_cubit.dart';
 import 'package:e_commerce/models/categories_model.dart';
+import 'package:e_commerce/modules/product_details_screen/product_details_screen.dart';
 import 'package:e_commerce/shared/components/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -201,120 +202,131 @@ Widget builderWidget(cubit, list, context, CategoryModel categoryModel) =>
       ),
     );
 
-Widget customGridView(list, context) => Container(
-      color: Colors.grey[100],
-      child: GridView.count(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        mainAxisSpacing: 1,
-        crossAxisSpacing: 1,
-        childAspectRatio: 1 / 1.45,
-        children: List.generate(
-          list!.length,
-          (index) => ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(
-                    alignment: AlignmentDirectional.bottomStart,
-                    children: [
-                      CachedNetworkImage(
-                        height: 200,
-                        width: double.infinity,
-                        imageUrl: list[index].image.toString(),
-                        errorWidget: (context, url, error) => const Center(
-                          child: Icon(Icons.error),
-                        ),
-                        progressIndicatorBuilder: (context, url, progress) =>
-                            const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                      if (list[index].discount != 0)
-                        Container(
-                          color: Colors.red,
-                          padding: const EdgeInsets.all(2),
-                          child: Text(
-                            'DISCOUNT',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(color: Colors.white, fontSize: 12),
+Widget customGridView(list, context) => GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: 2,
+      mainAxisSpacing: 1,
+      crossAxisSpacing: 1,
+      childAspectRatio: 1 / 1.45,
+      children: List.generate(
+        list!.length,
+        (index) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: InkWell(
+            onTap: () {
+              LoginCubit.get(context).getProductDetails();
+              navigateTo(
+                  context,
+                  ProductDetailsScreen(
+                    id: list[index].id,
+                    index: index,
+                  ));
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      alignment: AlignmentDirectional.bottomStart,
+                      children: [
+                        CachedNetworkImage(
+                          height: 200,
+                          width: double.infinity,
+                          imageUrl: list[index].image.toString(),
+                          errorWidget: (context, url, error) => const Center(
+                            child: Icon(Icons.error),
+                          ),
+                          progressIndicatorBuilder: (context, url, progress) =>
+                              const Center(
+                            child: CircularProgressIndicator(),
                           ),
                         ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          list[index].name.toString(),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              '${list[index].price.round()} LE',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                        if (list[index].discount != 0)
+                          Container(
+                            color: Colors.red,
+                            padding: const EdgeInsets.all(2),
+                            child: Text(
+                              'DISCOUNT',
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall!
-                                  .copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
+                                  .copyWith(color: Colors.white, fontSize: 12),
                             ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            if (list[index].discount != 0)
+                          ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            list[index].name.toString(),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Row(
+                            children: [
                               Text(
-                                list[index].oldPrice.round().toString(),
+                                '${list[index].price.round()} LE',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
                                     .copyWith(
-                                      decoration: TextDecoration.lineThrough,
-                                      decorationColor: Colors.red,
-                                      decorationThickness: 2,
-                                      color: Colors.grey,
+                                      color: Theme.of(context).primaryColor,
                                     ),
                               ),
-                            const Spacer(),
-                            CircleAvatar(
-                              radius: 15,
-                              backgroundColor: LoginCubit.get(context)
-                                      .favorites[list[index].id]!
-                                  ? primary
-                                  : Colors.grey,
-                              child: IconButton(
-                                onPressed: () {
-                                  LoginCubit.get(context)
-                                      .changeFav(list[index].id);
-                                },
-                                icon: const Icon(
-                                  Icons.favorite_outline_rounded,
-                                  color: Colors.white,
-                                  size: 15,
-                                ),
+                              const SizedBox(
+                                width: 5,
                               ),
-                            )
-                          ],
-                        ),
-                      ],
+                              if (list[index].discount != 0)
+                                Text(
+                                  list[index].oldPrice.round().toString(),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationColor: Colors.red,
+                                        decorationThickness: 2,
+                                        color: Colors.grey,
+                                      ),
+                                ),
+                              const Spacer(),
+                              CircleAvatar(
+                                radius: 15,
+                                backgroundColor: LoginCubit.get(context)
+                                        .favorites[list[index].id]!
+                                    ? primary
+                                    : Colors.grey,
+                                child: IconButton(
+                                  onPressed: () {
+                                    LoginCubit.get(context)
+                                        .changeFav(list[index].id);
+                                  },
+                                  icon: const Icon(
+                                    Icons.favorite_outline_rounded,
+                                    color: Colors.white,
+                                    size: 15,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
