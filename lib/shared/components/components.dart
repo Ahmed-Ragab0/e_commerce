@@ -215,13 +215,8 @@ Widget customGridView(list, context) => GridView.count(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
             onTap: () {
-              LoginCubit.get(context).getProductDetails();
-              navigateTo(
-                  context,
-                  ProductDetailsScreen(
-                    id: list[index].id,
-                    index: index,
-                  ));
+              LoginCubit.get(context).getProductDetails(id: list[index].id);
+              navigateTo(context, ProductDetailsScreen());
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),

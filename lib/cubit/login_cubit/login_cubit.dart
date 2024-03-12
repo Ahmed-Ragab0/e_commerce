@@ -247,16 +247,16 @@ class LoginCubit extends Cubit<LoginStates> {
   }
 
   ProductDetailsModel? productDetailsModel;
-  void getProductDetails() {
+  void getProductDetails({required id}) {
     emit(GetProductDetailsLoadingState());
 
     DioHelper.getData(
-      url: categoryProducts,
+      url: 'products/$id',
       token: token,
     ).then(
       (value) {
         productDetailsModel = ProductDetailsModel.fromJson(value!.data);
-        print(productDetailsModel!.data!.data![0].name);
+        print(productDetailsModel!.data!.name);
 
         emit(GetProductDetailsSuccessState());
       },

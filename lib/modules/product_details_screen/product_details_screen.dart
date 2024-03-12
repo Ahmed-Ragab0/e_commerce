@@ -7,10 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
-  const ProductDetailsScreen({super.key, this.id, this.index});
-
-  final int? id;
-  final int? index;
+  const ProductDetailsScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +19,7 @@ class ProductDetailsScreen extends StatelessWidget {
           body: ConditionalBuilder(
             condition: state is! GetProductDetailsLoadingState,
             builder: (context) {
-              var productList = LoginCubit.get(context)
-                  .productDetailsModel!
-                  .data!
-                  .data![index!];
+              var product = LoginCubit.get(context).productDetailsModel!.data;
               return SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -38,21 +32,20 @@ class ProductDetailsScreen extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: CachedNetworkImage(
-                              imageUrl: productList.image.toString(),
+                              imageUrl: product!.image.toString(),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: CircleAvatar(
                               radius: 20,
-                              backgroundColor: LoginCubit.get(context)
-                                      .favorites[productList.id]!
-                                  ? primary
-                                  : Colors.grey,
+                              backgroundColor:
+                                  LoginCubit.get(context).favorites[product.id]!
+                                      ? primary
+                                      : Colors.grey,
                               child: IconButton(
                                 onPressed: () {
-                                  LoginCubit.get(context)
-                                      .changeFav(productList.id);
+                                  LoginCubit.get(context).changeFav(product.id);
                                 },
                                 icon: const Icon(
                                   Icons.favorite_outline_rounded,
@@ -68,7 +61,7 @@ class ProductDetailsScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              productList.name.toString(),
+                              product.name.toString(),
                               style: Theme.of(context).textTheme.headlineMedium,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -76,7 +69,7 @@ class ProductDetailsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Text(productList.description.toString())
+                      Text(product.description.toString())
                     ],
                   ),
                 ),
