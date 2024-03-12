@@ -5,6 +5,7 @@ import 'package:e_commerce/layout/home_layout.dart';
 import 'package:e_commerce/modules/register/register_screen.dart';
 import 'package:e_commerce/network/local/cach_helper.dart';
 import 'package:e_commerce/shared/components/components.dart';
+import 'package:e_commerce/shared/components/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,12 +26,13 @@ class LoginScreen extends StatelessWidget {
             debugPrint(state.signInModel?.data?.token);
             CachHelper.setData(
                     key: 'token', value: state.signInModel?.data?.token)
-                .then(
-              (value) => navigateAndFinish(
+                .then((value) {
+              token = state.signInModel?.data?.token;
+              navigateAndFinish(
                 context,
                 const HomeLayout(),
-              ),
-            );
+              );
+            });
 
             Fluttertoast.showToast(
               msg: '${state.signInModel!.message}',

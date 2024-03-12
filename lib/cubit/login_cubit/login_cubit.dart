@@ -6,6 +6,7 @@ import 'package:e_commerce/models/favorites_data_model.dart';
 import 'package:e_commerce/models/product_model.dart';
 import 'package:e_commerce/models/sign_in_model.dart';
 import 'package:e_commerce/models/home_model.dart';
+import 'package:e_commerce/models/update_model.dart';
 import 'package:e_commerce/modules/category_screen/category_screen.dart';
 import 'package:e_commerce/modules/favorite_screen/favorite_screen.dart';
 import 'package:e_commerce/modules/home_screen/home_screen.dart';
@@ -264,6 +265,31 @@ class LoginCubit extends Cubit<LoginStates> {
       (error) {
         print(error.toString());
         emit(GetProductDetailsErrorState());
+      },
+    );
+  }
+
+  UpdateModel? updateModel;
+  void updateData(
+      {required String name, required String email, required phone}) {
+    emit(UpdateDataLoadingState());
+    DioHelper.putData(
+      url: update,
+      data: {
+        'name': name,
+        'email': email,
+        'phone': phone,
+      },
+      token: token,
+    ).then((value) {
+      updateModel = UpdateModel.fromJson(value!.data);
+      print(updateModel!.message);
+      print(updateModel!.data!.name);
+      emit(UpdateDataSuccessState());
+    }).catchError(
+      (e) {
+        print(e.toString());
+        emit(UpdateDataErrorState());
       },
     );
   }

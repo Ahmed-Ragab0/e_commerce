@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
-  const ProductDetailsScreen();
+  const ProductDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ProductDetailsScreen extends StatelessWidget {
           body: ConditionalBuilder(
             condition: state is! GetProductDetailsLoadingState,
             builder: (context) {
-              var product = LoginCubit.get(context).productDetailsModel!.data;
+              var product = LoginCubit.get(context).productDetailsModel?.data;
               return SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),

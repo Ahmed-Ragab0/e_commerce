@@ -62,3 +62,9 @@ class GetProfileSuccessState extends LoginStates {
 }
 
 class GetProfileErrorState extends LoginStates {}
+
+class UpdateDataLoadingState extends LoginStates {}
+
+class UpdateDataSuccessState extends LoginStates {}
+
+class UpdateDataErrorState extends LoginStates {}

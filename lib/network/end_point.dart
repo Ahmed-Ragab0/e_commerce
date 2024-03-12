@@ -4,3 +4,4 @@ const getCategory = 'categories';
 const fav = 'favorites';
 const categoryProducts = 'products';
 const profile = 'profile';
+const update = 'update-profile';
